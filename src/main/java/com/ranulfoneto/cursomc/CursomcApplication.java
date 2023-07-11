@@ -14,7 +14,6 @@ import com.ranulfoneto.cursomc.domain.Cliente;
 import com.ranulfoneto.cursomc.domain.Endereco;
 import com.ranulfoneto.cursomc.domain.Estado;
 import com.ranulfoneto.cursomc.domain.ItemPedido;
-import com.ranulfoneto.cursomc.domain.ItemPedidoPK;
 import com.ranulfoneto.cursomc.domain.Pagamento;
 import com.ranulfoneto.cursomc.domain.PagamentoComBoleto;
 import com.ranulfoneto.cursomc.domain.PagamentoComCartao;
@@ -125,11 +124,11 @@ public class CursomcApplication implements CommandLineRunner {
 
 		ped1.getItens().addAll(Arrays.asList(ip1, ip2));
 		ped2.getItens().addAll(Arrays.asList(ip3));
-
+		
 		p1.getItens().addAll(Arrays.asList(ip1));
 		p2.getItens().addAll(Arrays.asList(ip3));
 		p3.getItens().addAll(Arrays.asList(ip2));
-
+		
 		itemPedidoRepository.saveAll(Arrays.asList(ip1, ip2, ip3));
 	}
 
