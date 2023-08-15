@@ -10,8 +10,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -24,7 +25,7 @@ public class SecurityConfig {
     private Environment env;
     
     private static final String[] PUBLIC_MATCHERS = {
-        "/h2-console/**",
+        "/h2-console/**"
     };
 
     private static final String[] PUBLIC_MATCHERS_GET = {
@@ -39,18 +40,17 @@ public class SecurityConfig {
                 .frameOptions((frameOptions) -> frameOptions
                 .disable()));
         }
-        
         http
             .cors((cors) -> cors.disable())
             .csrf((csrf) -> csrf.disable());
             
         http
-			.authorizeHttpRequests((requests) -> requests
+			.authorizeHttpRequests((request) -> request
 				.requestMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
-                .requestMatchers(PUBLIC_MATCHERS).permitAll()
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
 				.anyRequest().authenticated());
         
-        http.sessionManagement((sessions) -> sessions
+        http.sessionManagement((session) -> session
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
 		return http.build();
@@ -61,6 +61,11 @@ public class SecurityConfig {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
         return source;
+    }
+
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
 }
